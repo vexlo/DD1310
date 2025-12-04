@@ -10,6 +10,22 @@ class GUI:
         self.huvud.title("Periodiska systemet") #Titel på fönster
         self.huvud.geometry("800x600") #Storlek på fönster
 
+        #Default värden ifall något går fel.
+        self.atom = "Väte"
+        self.fråga = "Vilken atomnummer har Väte?"
+        self.korrekt = 1
+        self.datatyp = int
+        self.försök = 1
+        self.max_försök = 3
+        self.sak_att_gissa = 0
+
+        #Väljer en slumpad atom
+        self.aktuell_atom = self.system.slumpa_atom()
+
+        self.feedback = 0
+        self.grid_frame = 0
+        self.början = 0
+
         self.huvudmeny() #startar huvudmenyn
 
     def huvudmeny(self):
@@ -69,8 +85,6 @@ class GUI:
         self.fråga = frågdata["fråga"]
         self.korrekt = frågdata["korrekt"]
         self.datatyp = frågdata["datatyp"]
-        self.försök = 1
-        self.max_försök = 3
         self.sak_att_gissa = sak_att_gissa
 
         #Skapa rubrik
@@ -161,8 +175,6 @@ class GUI:
         #Titel 
         tk.Label(self.huvud,text="Periodiska Systemet-pussel",font=("Arial",20)).pack(pady=15)
 
-        #Väljer en slumpad atom
-        self.aktuell_atom = self.system.slumpa_atom()
 
         #Skapa en ram för knapparna som ska representera periodiska systemet
         tk.Label(self.huvud,text=f"Placera atom: {self.aktuell_atom.atomnamn} ({self.aktuell_atom.atombeteckning})",font=("Arial", 16)).pack(pady=5)
