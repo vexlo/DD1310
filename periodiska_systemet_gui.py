@@ -1,6 +1,6 @@
 """Modul som innehåller kod för grafiskt användargränssnitt."""
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 
 class GUI:
     """GUI för periodiska systemet huvudfil."""
@@ -33,7 +33,7 @@ class GUI:
         self.töm() #Tömmer allt på skärmen
 
         #Skapar titeln för menyn
-        tk.Label(self.huvud,text="Meny", font=("Arial",26)).pack(pady=25)
+        ttk.Label(self.huvud,text="Meny", font=("Arial",26)).pack(pady=25)
 
         #Lista med knappar, lambda för att kalla funktion med paramterar som knapp
         knappar = [
@@ -49,7 +49,7 @@ class GUI:
 
         #Skapa och "packa" varje knapp i fönstret skapar knappar utifrån listan
         for text,cmd in knappar:
-            tk.Button(self.huvud,text=text,width=30,height=2,command=cmd).pack(pady=5)
+            ttk.Button(self.huvud,text=text,command=cmd,width=30).pack(pady=3)
 
     def töm(self):
         """Tar bort allt från huvudfönstret."""
@@ -60,7 +60,7 @@ class GUI:
         """Visar alla atomer i textfält."""
         self.töm()
         #Skapa rubrik
-        tk.Label(self.huvud,text="Alla atomer", font=("Arial",20)).pack(pady=10)
+        ttk.Label(self.huvud,text="Alla atomer", font=("Arial",20)).pack(pady=10)
 
         #Skapar ett textfält där alla atomer visas
         t = tk.Text(self.huvud,width=60,height=22)
@@ -71,7 +71,7 @@ class GUI:
             t.insert(tk.END, rad + "\n")
 
         #Skapar knapp som går tillbaka till huvudmenyn (kallar funktionen)
-        tk.Button(self.huvud,text="Tillbaka",command=self.huvudmeny).pack(pady=20)
+        ttk.Button(self.huvud,text="Tillbaka",command=self.huvudmeny).pack(pady=20)
 
     def börja_träning(self, sak_att_gissa):
         """Börjar träningsmomentet för ett attribut, tar emot användarens gissning."""
@@ -88,21 +88,21 @@ class GUI:
         self.sak_att_gissa = sak_att_gissa
 
         #Skapa rubrik
-        tk.Label(self.huvud,text=f"Träna på {sak_att_gissa}",font=("Arial",20)).pack(pady=10)
+        ttk.Label(self.huvud,text=f"Träna på {sak_att_gissa}",font=("Arial",20)).pack(pady=10)
         #Visar frågan
-        tk.Label(self.huvud,text=self.fråga,font=("Arial",16)).pack(pady=15)
+        ttk.Label(self.huvud,text=self.fråga,font=("Arial",16)).pack(pady=15)
 
         #Skapa inmatningfält
-        self.början = tk.Entry(self.huvud, font=("Arial",16))
+        self.början = ttk.Entry(self.huvud, font=("Arial",16))
         self.början.pack(pady=10)
 
         #Skapa knapp för att ta emot användarens gissning
-        tk.Button(self.huvud,text="Gissa",command=self.kolla_träning).pack(pady=5)
+        ttk.Button(self.huvud,text="Gissa",command=self.kolla_träning).pack(pady=5)
         #Knapp för tillbaka till menyn
-        tk.Button(self.huvud,text="Tillbaka",command=self.huvudmeny).pack(pady=5)
+        ttk.Button(self.huvud,text="Tillbaka",command=self.huvudmeny).pack(pady=5)
 
         #Skapa en liten text under knapparna om det är rätt eller fel
-        self.feedback = tk.Label(self.huvud,text="",font=("Arial",14))
+        self.feedback = ttk.Label(self.huvud,text="",font=("Arial",14))
         self.feedback.pack(pady=20)
 
     def kolla_träning(self):
@@ -144,19 +144,19 @@ class GUI:
         alternativen = data["alternativ"]
 
         #Visa frågan som rubrik
-        tk.Label(self.huvud,text=f"Vilken atom är {rätt_atom.atombeteckning}?",font=("Arial",20)).pack(pady=20)
+        ttk.Label(self.huvud,text=f"Vilken atom är {rätt_atom.atombeteckning}?",font=("Arial",20)).pack(pady=20)
 
         #Skapa knappar för varje alternativ
         for i, atom in enumerate(alternativen):
             #Lambda för att inte den ska köras direkt utan istället när knappen trycks
-            tk.Button(self.huvud,text=f"{i+1}. {atom.atomnamn}", width=25,command=lambda a=atom:self.kolla_3val(a,rätt_atom)).pack(pady=5)
+            ttk.Button(self.huvud,text=f"{i+1}. {atom.atomnamn}", width=25,command=lambda a=atom:self.kolla_3val(a,rätt_atom)).pack(pady=5)
 
         #Feedback (rätt/fel)
-        self.feedback = tk.Label(self.huvud,text="",font=("Arial",15))
+        self.feedback = ttk.Label(self.huvud,text="",font=("Arial",15))
         self.feedback.pack(pady=15)
 
         #Knapp för att gå tillbaka
-        tk.Button(self.huvud,text="Tillbaka",command=self.huvudmeny).pack(pady=5)
+        ttk.Button(self.huvud,text="Tillbaka",command=self.huvudmeny).pack(pady=5)
 
     def kolla_3val(self,gissad,korrekt):
         """Kontrollerar användarens gissning när det är 3 alternativ."""
@@ -173,7 +173,7 @@ class GUI:
         self.töm()
 
         #Titel 
-        tk.Label(self.huvud,text="Periodiska Systemet-pussel",font=("Arial",20)).pack(pady=15)
+        ttk.Label(self.huvud,text="Periodiska Systemet-pussel",font=("Arial",20)).pack(pady=15)
 
 
         #Skapa en ram för knapparna som ska representera periodiska systemet
@@ -192,7 +192,7 @@ class GUI:
                 btn.grid(row=r, column=k) 
 
         #Tillbaka knapp
-        tk.Button(self.huvud, text="Tillbaka", command=self.huvudmeny).pack(pady=20)
+        ttk.Button(self.huvud, text="Tillbaka", command=self.huvudmeny).pack(pady=20)
 
     def kolla_pussel(self, rad, kolumn):
         """Kontrollerar om användaren har placerat den aktuella atomen på rätt plats."""
