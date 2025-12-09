@@ -22,6 +22,8 @@ class GUI:
         #Väljer en slumpad atom
         self.aktuell_atom = self.system.slumpa_atom()
 
+        self.rutnät = 0
+
         self.feedback = 0
         self.grid_frame = 0
         self.början = 0
@@ -131,27 +133,30 @@ class GUI:
         #Om användaren har nått max antal försök
         if self.försök > self.max_försök:
             self.feedback.config(text=f"Slut på försök. Rätt svar var: {self.korrekt}")
-            #Vänta 2 sekunder och starta om med ny slumpad atom
-            self.huvud.after(2000, lambda: self.börja_träning(self.sak_att_gissa))
+            #Vänta 1 sekunder och starta om med ny slumpad atom
+            self.huvud.after(1000, lambda: self.börja_träning(self.sak_att_gissa))
+            self.försök = 1
 
     def gissa_atom_gui(self):
         """Visar en gui fråga gui fråga där användaren ska gissa rätt bland tre alternativ."""
         self.töm()
+        self.försök = 1
 
         #Hämta slumpade atomer och rätt atom från systemet
         data = self.system.gissa_atom_gui()
-        rätt_atom = data["rätt_atom"]   
+        rätt_atom = data["rätt_atom"]  
         alternativen = data["alternativ"]
 
         #Visa frågan som rubrik
-        ttk.Label(self.huvud,text=f"Vilken atom är {rätt_atom.atombeteckning}?",font=("Arial",20)).pack(pady=20)
+        ttk.Label(self.huvud,text=f"Vilken atom är {rätt_atom.atomnamn}?",font=("Arial",20)).pack(pady=20)
 
-        #Skapa knappar för varje alternativ
+        #Skapa knappar för varje alternativ, enumerate handlar om att skapa en counter till varje "item" 
+        #i en lista eller "iretable"
         for i, atom in enumerate(alternativen):
             #Lambda för att inte den ska köras direkt utan istället när knappen trycks
-            ttk.Button(self.huvud,text=f"{i+1}. {atom.atomnamn}", width=25,command=lambda a=atom:self.kolla_3val(a,rätt_atom)).pack(pady=5)
+            ttk.Button(self.huvud,text=f"{i+1}. {atom.atomvikt}", width=25,command=lambda a=atom:self.kolla_3val(a,rätt_atom)).pack(pady=5)
 
-        #Feedback (rätt/fel)
+        #Feedback (rätt/fel) modifieras senare.
         self.feedback = ttk.Label(self.huvud,text="",font=("Arial",15))
         self.feedback.pack(pady=15)
 
@@ -164,9 +169,16 @@ class GUI:
         if gissad == korrekt:
             #Uppdatera feedback med korrekt som meddelande
             self.feedback.config(text="Korrekt!")
+            self.huvud.after(1000, self.gissa_atom_gui)
         else:
             #Om fel säga vad som var rätt
-            self.feedback.config(text=f"Fel! Rätt svar: {korrekt.atomnamn}")
+            self.feedback.config(text=f"Fel! 2/{self.försök}")
+            self.försök += 1
+            if self.försök > self.max_försök-1:
+                self.feedback.config(text=f"Slut av försök! Rätt svar: {korrekt.atomnamn}")
+                self.huvud.after(1000, self.gissa_atom_gui)
+
+            
 
     def start_pussel(self):
         """Startar gui versionen av periodiska systemet spelet"""
@@ -178,15 +190,15 @@ class GUI:
 
         #Skapa en ram för knapparna som ska representera periodiska systemet
         tk.Label(self.huvud,text=f"Placera atom: {self.aktuell_atom.atomnamn} ({self.aktuell_atom.atombeteckning})",font=("Arial", 16)).pack(pady=5)
-        self.grid_frame = tk.Frame(self.huvud)
-        self.grid_frame.pack(pady=15)
+        self.rutnät = ttk.Frame(self.huvud)
+        self.rutnät.pack(pady=15)
 
         #Skapa ett 10x18 rutnät
         for r in range(1, 11):
             for k in range(1, 19):
                 #Lambda används för att knappen ska fungera som den ska
-                btn = tk.Button(self.grid_frame, text=f"{r},{k}",
-                                width=4, height=2,
+                btn = ttk.Button(self.rutnät, text=f"{r},{k}",
+                                width=4,
                                 command=lambda rr=r, cc=k: self.kolla_pussel(rr, cc))
                 #Placera knappen i rutnätet
                 btn.grid(row=r, column=k) 

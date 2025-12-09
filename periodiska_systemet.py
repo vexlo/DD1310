@@ -43,7 +43,7 @@ class Periodiska_systemet:
                 atomnummer = int(delar[3])
                 atomrad = int(delar[4])
                 atomkolumn = int(delar[-1])
-             
+
                 #Skapar ett Atom-objekt
                 self.atomer[atomnummer] = Atom(atombeteckning,atomnamn,atomvikt,atomnummer,atomrad,atomkolumn)
 
@@ -57,7 +57,7 @@ class Periodiska_systemet:
             rad = f"{atom.atomnummer}: {atom.atombeteckning} {atom.atomnamn} {atom.atomvikt} {atom.rad} {atom.kolumn}"
             resultat.append(rad) #lägger till strängen i resultatlistan
         return resultat
-      
+
     def slumpa_atom(self):
         """Slumpar fram atomer från nycklarna i en dictionary."""
          #från random modulen slumpar man från en lista av nycklar i dict atomer
@@ -110,7 +110,7 @@ class Periodiska_systemet:
             else:
                 print(f"Fel, försök: {försök}")
                 försök += 1
-        self.meny() #sedam återgå till menyn efter alla försök
+        self.meny() #sedan återgå till menyn efter alla försök
 
     def placera_atom(self, atom):
         """Låter användaren placera in atomer i ett tomt periodisk system."""
@@ -131,7 +131,7 @@ class Periodiska_systemet:
 
                 #Kontrollera om användaren placerade atomen korrekt
                 if användar_rad == korrekt_rad and användar_kolumn == korrekt_kolumn:
-                    self.tomt_system[korrekt_rad][korrekt_kolumn] = atom.atombeteckning
+                    self.tomt_system[korrekt_rad-1][korrekt_kolumn-1] = atom.atombeteckning
                     print("Rätt plats!")
                     break
                 else:
@@ -143,7 +143,7 @@ class Periodiska_systemet:
         """Kallar in metoden placera_atom och visa_periodiskt_system.
            Sedan när varje atom är placerad så skickas ett meddelande till konsolen.
         """
-        
+
         #En lista med alla atomer skapas sedan blandas ordningen slumpmässigt.
         alla_atomer = list(self.atomer.values())
         random.shuffle(alla_atomer)
@@ -166,14 +166,14 @@ class Periodiska_systemet:
 
     def gissa_atom_text(self,max_försök=2):
         """Metod för att låta användaren gissa mellan 3 atomer utifrån beteckning."""
-        
+
         #Slumpar tre atomer
         slumpade_atomer = [self.slumpa_atom(), self.slumpa_atom(),self.slumpa_atom()]
         #väljer en av atomerna som rätt svar
         rätt_atom = random.choice(slumpade_atomer)
-        print(f"Vilken atom är: {rätt_atom.atombeteckning}\n1. {slumpade_atomer[0].atomnamn}\n2. {slumpade_atomer[1].atomnamn}\n3. {slumpade_atomer[2].atomnamn}")
+        print(f"Vilken atomvikt har: {rätt_atom.atomnamn}\n1. {slumpade_atomer[0].atomvikt}\n2. {slumpade_atomer[1].atomvikt}\n3. {slumpade_atomer[2].atomvikt}")
         försök = 1
-     
+
         #Loopar tills rätt svar eller max antal försök nås
         while försök <= max_försök:
             användarsvar = input("Vad är din gissning? ")
@@ -203,7 +203,7 @@ class Periodiska_systemet:
         elif sak_att_gissa == "atomvikt":
             datatyp = float
             fråga = f"Vilken {sak_att_gissa} har {atom.atomnamn}?"
-        else: 
+        else:
             datatyp = str
             if sak_att_gissa == "atomnamn":
                 #Om användaren tränar på atomnamn används atomnummer som ledtråd.
@@ -299,7 +299,7 @@ class Periodiska_systemet:
 
 
 
-        
+
 
 def kolla_om_fil_finns(fil,filnamn,url_att_ladda_ner):
 
@@ -335,9 +335,11 @@ def main():
 
     match text_eller_gui:
         case "1":
-            #Startar all kod för gui
+            #Skapar huvudfönstret
             grund = tk.Tk()
-            app = GUI(grund, systemet)
+            #Skapar instans av GUI från modulen GUI
+            GUI(grund, systemet)
+            #Gör att fönstret reagerar på användarens handlingar
             grund.mainloop()
         case "2":
             #Kallar på huvudmenyn
